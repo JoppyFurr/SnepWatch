@@ -1,0 +1,26 @@
+{
+  "devDependencies": {
+    "@fitbit/sdk": "~4.3.0"
+  },
+  "fitbit": {
+    "appUUID": "4fbdf246-a9cf-4d9f-b5a3-6c30c4ced3c1",
+    "appType": "clockface",
+    "appDisplayName": "SnepWatch",
+    "iconFile": "resources/icon.png",
+    "wipeColor": "#607d8b",
+    "requestedPermissions": [
+      "access_activity",
+      "access_heart_rate",
+      "access_user_profile"
+    ],
+    "buildTargets": [
+      "mira"
+    ],
+    "i18n": {
+      "en-US": {
+        "name": "SnepWatch"
+      }
+    },
+    "defaultLanguage": "en-US"
+  }
+}

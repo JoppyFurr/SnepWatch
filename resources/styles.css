@@ -1,0 +1,50 @@
+.battery {
+    font-family: System-Regular;
+    font-size: 32;
+    text-length: 8;
+    font-weight: regular;
+    width: 100%;
+    fill: fb-white;
+    text-anchor: start;
+}
+
+.time {
+    font-family: System-Regular;
+    font-size: 32;
+    text-length: 8;
+    font-weight: regular;
+    width: 100%;
+    fill: fb-white;
+    text-anchor: middle;
+}
+
+.steps {
+    font-family: System-Regular;
+    font-size: 32;
+    text-length: 8;
+    font-weight: regular;
+    width: 100%;
+    fill: fb-white;
+    text-anchor: middle;
+}
+
+.heart {
+    font-family: System-Regular;
+    font-size: 32;
+    text-length: 8;
+    font-weight: regular;
+    width: 100%;
+    fill: fb-pink;
+    text-anchor: middle;
+}
+
+
+.zone {
+    font-family: System-Regular;
+    font-size: 32;
+    text-length: 32;
+    font-weight: regular;
+    width: 100%;
+    fill: fb-lavender;
+    text-anchor: middle;
+}
