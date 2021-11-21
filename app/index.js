@@ -13,11 +13,30 @@ import { battery } from "power"
 import { today } from "user-activity"
 import { user } from "user-profile"
 
-let gui_battery = document.getElementById ("battery")
-let gui_time    = document.getElementById ("time")
-let gui_steps   = document.getElementById ("steps")
-let gui_heart   = document.getElementById ("heart")
-let gui_zone    = document.getElementById ("zone")
+let gui_battery_0 = document.getElementById ("battery_0")
+let gui_battery_1 = document.getElementById ("battery_1")
+let gui_battery_2 = document.getElementById ("battery_2")
+let gui_battery_3 = document.getElementById ("battery_3")
+let gui_battery = [ gui_battery_0, gui_battery_1, gui_battery_2, gui_battery_3 ]
+
+let gui_date_0  = document.getElementById ("date_0")
+let gui_date_1  = document.getElementById ("date_1")
+let gui_date_2  = document.getElementById ("date_2")
+let gui_date_3  = document.getElementById ("date_3")
+let gui_date_4  = document.getElementById ("date_4")
+let gui_date_5  = document.getElementById ("date_5")
+let gui_date_6  = document.getElementById ("date_6")
+let gui_date_7  = document.getElementById ("date_7")
+let gui_date_8  = document.getElementById ("date_8")
+let gui_date_9  = document.getElementById ("date_9")
+let gui_date_10 = document.getElementById ("date_10")
+let gui_date = [ gui_date_0, gui_date_1, gui_date_2, gui_date_3, gui_date_4,
+                 gui_date_5, gui_date_6, gui_date_7, gui_date_8, gui_date_9, gui_date_10 ]
+
+let gui_time      = document.getElementById ("time")
+let gui_steps     = document.getElementById ("steps")
+let gui_heart     = document.getElementById ("heart")
+let gui_zone      = document.getElementById ("zone")
 
 let have_activity = false
 
@@ -28,28 +47,67 @@ let body_present = false
 let current_heart_rate = 0
 let current_zone = "--"
 
+/* TODO: Only replace images if they've changed */
+/* TODO: Battery colour based on percentage */
+/* TODO: Configurable colours */
+/* TODO: Configurable "Snep"tember */
+
+function draw_text (target, font, string)
+{
+    for (let i = 0; i < target.length; i++)
+    {
+        let c = string.charAt (i)
+        if (c == ' ' || c == '')
+        {
+            target [i].image = font + "/blank.png"
+        }
+        else
+        {
+            target [i].image = font + "/" + string.charCodeAt (i) + ".png"
+        }
+    }
+}
+
+let days = [ "Sun ", "Mon ", "Tue ", "Wed ", "Thu ", "Fri ", "Sat " ]
+let months = [ " Jan", " Feb", " Mar", " Apr", " May", " June", " July", " Aug", " Snep", " Oct", " Nov", " Dec"]
 
 function snepwatch_tick (event)
 {
+    /* Battery level */
+    let battery_text = ((battery.chargeLevel < 10) ? "0" : "") + battery.chargeLevel + "%"
+    draw_text (gui_battery, "Terminus_12", battery_text)
+
+    /* Date */
+    let day = days [ event.date.getDay () ]
+    let dd = event.date.getDate ()
+    dd = ((dd < 10) ? "0" : "") + dd
+    let month = months [ event.date.getMonth () ]
+
+    let date_text = day + dd + month
+    if (date_text.length < 11)
+    {
+        date_text = " " + date_text
+    }
+    draw_text (gui_date, "Terminus_14", date_text);
+
+    /* Time */
     let hh = event.date.getHours ()
     let mm = event.date.getMinutes ()
     let ss = event.date.getSeconds ()
-    
-    /* Zero-pad */
     hh = ((hh < 10) ? "0" : "") + hh
     mm = ((mm < 10) ? "0" : "") + mm
     ss = ((ss < 10) ? "0" : "") + ss
         
     gui_time.text = hh + ":" + mm + ":" + ss
-  
-    gui_battery.text = "" + battery.chargeLevel + "%"
 
+    /* Steps */
     if (have_activity)
     {
         /* TODO: comma-separators */
         gui_steps.text = "" + today.adjusted.steps
     }
   
+    /* Heart Rate */
     if (have_heart_rate)
     {
         if (body_present && current_heart_rate != 0)
