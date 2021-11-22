@@ -66,7 +66,7 @@ let current_zone = ""
 /* TODO: Configurable colours */
 /* TODO: Configurable "Snep"tember */
 
-function draw_text (target, font, string)
+function draw_text (target, font, string, colour="fb-white")
 {
     for (let i = 0; i < target.length; i++)
     {
@@ -78,6 +78,7 @@ function draw_text (target, font, string)
         else
         {
             target [i].image = font + "/" + string.charCodeAt (i) + ".png"
+            target [i].style.fill = colour
         }
     }
 }
@@ -89,7 +90,7 @@ function snepwatch_tick (event)
 {
     /* Battery level */
     let battery_text = ((battery.chargeLevel < 10) ? "0" : "") + battery.chargeLevel + "%"
-    draw_text (gui_battery, "Terminus_12", battery_text)
+    draw_text (gui_battery, "Terminus_12", battery_text, "fb-lavender")
 
     /* Date */
     let day = days [ event.date.getDay () ]
@@ -132,13 +133,13 @@ function snepwatch_tick (event)
             {
                 /* TODO: Set colour */
                 case "fat-burn":
-                    draw_text (gui_zone,  "Terminus_14", "Fat-burn")
+                    draw_text (gui_zone,  "Terminus_14", "Fat-burn", "fb-lavender")
                     break;
                 case "cardio":
-                    draw_text (gui_zone,  "Terminus_14", "  Cardio")
+                    draw_text (gui_zone,  "Terminus_14", "  Cardio", "fb-peach")
                     break;
                 case "peak":
-                    draw_text (gui_zone,  "Terminus_14", "    Peak")
+                    draw_text (gui_zone,  "Terminus_14", "    Peak", "fb-white")
                     break;
                 default:
                     draw_text (gui_zone,  "Terminus_14", "")
