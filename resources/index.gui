@@ -20,13 +20,25 @@
     <image id="date_10" href="Terminus_14/45.png" x="278" y ="4" width="16" height="32" class="date" />
 
     <!-- Time -->
-    <text id="time" x="50%" y="20%" class="time"> 00:00:00 </text>
+    <text id="time" x="50%" y="40%" class="time"> 00:00:00 </text>
 
     <!-- Steps -->
-    <text id="steps" x="50%" y="40%" class="steps"> -- </text>
+    <text id="steps" x="50%" y="60%" class="steps"> -- </text>
 
     <!-- Heart Rate Monitor -->
-    <text id="heart" x="50%" y="60%" class="heart"> -- </text>
+    <image id="heart_s" href="Terminus_14/226.png"   x="8"  y="268" width="16" height="32" class="heart" />
+    <image id="heart_0" href="Terminus_14/45.png"    x="28" y="268" width="16" height="32" class="heart" />
+    <image id="heart_1" href="Terminus_14/45.png"    x="44" y="268" width="16" height="32" class="heart" />
+    <image id="heart_2" href="Terminus_14/blank.png" x="60" y="268" width="16" height="32" class="heart" />
 
-    <text id="zone" x="50%" y="80%" class="zone"> -- </text>
+    <!-- Heart Rate Zone -->
+    <image id="zone_0" href="Terminus_14/blank.png" x="166" y="268" width="16" height="32" class="heart" />
+    <image id="zone_1" href="Terminus_14/blank.png" x="182" y="268" width="16" height="32" class="heart" />
+    <image id="zone_2" href="Terminus_14/blank.png" x="198" y="268" width="16" height="32" class="heart" />
+    <image id="zone_3" href="Terminus_14/blank.png" x="214" y="268" width="16" height="32" class="heart" />
+    <image id="zone_4" href="Terminus_14/blank.png" x="230" y="268" width="16" height="32" class="heart" />
+    <image id="zone_5" href="Terminus_14/blank.png" x="246" y="268" width="16" height="32" class="heart" />
+    <image id="zone_6" href="Terminus_14/blank.png" x="262" y="268" width="16" height="32" class="heart" />
+    <image id="zone_7" href="Terminus_14/blank.png" x="278" y="268" width="16" height="32" class="heart" />
+
 </svg>

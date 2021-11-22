@@ -35,8 +35,22 @@ let gui_date = [ gui_date_0, gui_date_1, gui_date_2, gui_date_3, gui_date_4,
 
 let gui_time      = document.getElementById ("time")
 let gui_steps     = document.getElementById ("steps")
-let gui_heart     = document.getElementById ("heart")
-let gui_zone      = document.getElementById ("zone")
+
+let gui_heart_0 = document.getElementById ("heart_0")
+let gui_heart_1 = document.getElementById ("heart_1")
+let gui_heart_2 = document.getElementById ("heart_2")
+let gui_heart = [ gui_heart_0, gui_heart_1, gui_heart_2 ]
+
+let gui_zone_0 = document.getElementById ("zone_0")
+let gui_zone_1 = document.getElementById ("zone_1")
+let gui_zone_2 = document.getElementById ("zone_2")
+let gui_zone_3 = document.getElementById ("zone_3")
+let gui_zone_4 = document.getElementById ("zone_4")
+let gui_zone_5 = document.getElementById ("zone_5")
+let gui_zone_6 = document.getElementById ("zone_6")
+let gui_zone_7 = document.getElementById ("zone_7")
+let gui_zone = [ gui_zone_0, gui_zone_1, gui_zone_2, gui_zone_3,
+                 gui_zone_4, gui_zone_5, gui_zone_6, gui_zone_7 ]
 
 let have_activity = false
 
@@ -45,7 +59,7 @@ let heart_rate_monitor = null
 let body_presence_sensor = null
 let body_present = false
 let current_heart_rate = 0
-let current_zone = "--"
+let current_zone = ""
 
 /* TODO: Only replace images if they've changed */
 /* TODO: Battery colour based on percentage */
@@ -112,13 +126,29 @@ function snepwatch_tick (event)
     {
         if (body_present && current_heart_rate != 0)
         {
-            gui_heart.text = "" + current_heart_rate
-            gui_zone.text = "" + current_zone
+            draw_text (gui_heart, "Terminus_14", "" + current_heart_rate)
+
+            switch (current_zone)
+            {
+                /* TODO: Set colour */
+                case "fat-burn":
+                    draw_text (gui_zone,  "Terminus_14", "Fat-burn")
+                    break;
+                case "cardio":
+                    draw_text (gui_zone,  "Terminus_14", "  Cardio")
+                    break;
+                case "peak":
+                    draw_text (gui_zone,  "Terminus_14", "    Peak")
+                    break;
+                default:
+                    draw_text (gui_zone,  "Terminus_14", "")
+                    break;
+            }
         }
         else
         {
-            gui_heart.text = "--"
-            gui_zone.text = "--"
+            draw_text (gui_heart, "Terminus_14", "--")
+            draw_text (gui_zone,  "Terminus_14", "")
         }
     }
 }
