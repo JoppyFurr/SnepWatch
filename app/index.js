@@ -34,7 +34,16 @@ let gui_date = [ gui_date_0, gui_date_1, gui_date_2, gui_date_3, gui_date_4,
                  gui_date_5, gui_date_6, gui_date_7, gui_date_8, gui_date_9, gui_date_10 ]
 
 let gui_time      = document.getElementById ("time")
-let gui_steps     = document.getElementById ("steps")
+
+let gui_steps_0 = document.getElementById ("steps_0")
+let gui_steps_1 = document.getElementById ("steps_1")
+let gui_steps_2 = document.getElementById ("steps_2")
+let gui_steps_3 = document.getElementById ("steps_3")
+let gui_steps_4 = document.getElementById ("steps_4")
+let gui_steps_5 = document.getElementById ("steps_5")
+let gui_steps_6 = document.getElementById ("steps_6")
+let gui_steps = [ gui_steps_0, gui_steps_1, gui_steps_2,
+                  gui_steps_3, gui_steps_4, gui_steps_5, gui_steps_6 ]
 
 let gui_heart_0 = document.getElementById ("heart_0")
 let gui_heart_1 = document.getElementById ("heart_1")
@@ -62,9 +71,7 @@ let current_heart_rate = 0
 let current_zone = ""
 
 /* TODO: Only replace images if they've changed */
-/* TODO: Battery colour based on percentage */
 /* TODO: Configurable colours */
-/* TODO: Configurable "Snep"tember */
 
 function draw_text (target, font, string, colour="fb-white")
 {
@@ -90,7 +97,7 @@ function snepwatch_tick (event)
 {
     /* Battery level */
     let battery_text = ((battery.chargeLevel < 10) ? "0" : "") + battery.chargeLevel + "%"
-    draw_text (gui_battery, "Terminus_12", battery_text, "fb-lavender")
+    draw_text (gui_battery, "Terminus_12", battery_text, battery.chargeLevel <= 15 ? "fb-pink" : "fb-lavender")
 
     /* Date */
     let day = days [ event.date.getDay () ]
@@ -118,8 +125,14 @@ function snepwatch_tick (event)
     /* Steps */
     if (have_activity)
     {
-        /* TODO: comma-separators */
-        gui_steps.text = "" + today.adjusted.steps
+        let steps_string = "" + today.adjusted.steps
+
+        if (today.adjusted.steps >= 1000)
+        {
+            steps_string = steps_string.slice (0, -3) + "," + steps_string.slice (-3)
+        }
+
+        draw_text (gui_steps, "Terminus_14", steps_string)
     }
   
     /* Heart Rate */
@@ -131,7 +144,6 @@ function snepwatch_tick (event)
 
             switch (current_zone)
             {
-                /* TODO: Set colour */
                 case "fat-burn":
                     draw_text (gui_zone,  "Terminus_14", "Fat-burn", "fb-lavender")
                     break;

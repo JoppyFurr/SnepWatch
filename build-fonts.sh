@@ -14,12 +14,13 @@ generate_font ()
     do
         CODE=$(printf '%d' "'${CHAR}'")
         convert -font ${FONT} -pointsize ${SIZE} label:${CHAR} -filter point -resize 200% -negate ${DIR}/${CODE}.png
-        composite scanlines.png ${DIR}/${CODE}.png ${DIR}/${CODE}.png
+        convert ${DIR}/${CODE}.png scanlines.png -composite ${DIR}/${CODE}.png
     done
 }
 
-generate_font 12 "0 1 2 3 4 5 6 7 8 9 0 % -"
-generate_font 14 "0 1 2 3 4 5 6 7 8 9 0 - A C D F J M N O P S T W a b c d e g h i k l n o p r t u v y ♥"
+
+generate_font 12 "% - 0 1 2 3 4 5 6 7 8 9"
+generate_font 14 ", - 0 1 2 3 4 5 6 7 8 9 A C D F J M N O P S T W a b c d e g h i k l n o p r t u v y » ♥"
 
 
 

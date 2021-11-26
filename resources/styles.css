@@ -16,19 +16,18 @@
     text-anchor: middle;
 }
 
+.steps-icon {
+    fill: fb-mint;
+}
+
 .steps {
-    font-family: System-Regular;
-    font-size: 32;
-    text-length: 8;
-    font-weight: regular;
-    width: 100%;
     fill: fb-white;
-    text-anchor: middle;
 }
 
 .heart-icon {
     fill: fb-pink;
 }
+
 .heart {
     fill: fb-white;
 }
