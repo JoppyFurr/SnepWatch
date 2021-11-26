@@ -20,7 +20,16 @@
     <image id="date_10" href="Terminus_14/blank.png" x="278" y ="4" width="16" height="32" class="date" />
 
     <!-- Time -->
-    <text id="time" x="50%" y="40%" class="time"> 00:00:00 </text>
+    <image id="time_fill_0"    href="Digits_Fill/56.png" x="8"   y="80" width="64" height="128" class="time-fill" />
+    <image id="time_fill_1"    href="Digits_Fill/56.png" x="70"  y="80" width="64" height="128" class="time-fill" />
+    <image id="time_fill_2"    href="Digits_Fill/58.png" x="121" y="72" width="64" height="128" class="time-fill" />
+    <image id="time_fill_3"    href="Digits_Fill/56.png" x="164" y="80" width="64" height="128" class="time-fill" />
+    <image id="time_fill_4"    href="Digits_Fill/56.png" x="228" y="80" width="64" height="128" class="time-fill" />
+    <image id="time_outline_0" href="Digits_Outline/56.png" x="8"   y="80" width="64" height="128" class="time-outline" />
+    <image id="time_outline_1" href="Digits_Outline/56.png" x="70"  y="80" width="64" height="128" class="time-outline" />
+    <image id="time_outline_2" href="Digits_Outline/58.png" x="121" y="72" width="64" height="128" class="time-outline" />
+    <image id="time_outline_3" href="Digits_Outline/56.png" x="164" y="80" width="64" height="128" class="time-outline" />
+    <image id="time_outline_4" href="Digits_Outline/56.png" x="228" y="80" width="64" height="128" class="time-outline" />
 
     <!-- Steps -->
     <image id="steps_i" href="Terminus_14/194.png"   x="8"   y="236" width="16" height="32" class="steps-icon" />

@@ -6,14 +6,12 @@
     fill: fb-white;
 }
 
-.time {
-    font-family: System-Regular;
-    font-size: 32;
-    text-length: 8;
-    font-weight: regular;
-    width: 100%;
-    fill: fb-white;
-    text-anchor: middle;
+.time-fill {
+    fill: fb-red;
+}
+
+.time-outline {
+    fill: none;
 }
 
 .steps-icon {

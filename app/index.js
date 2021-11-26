@@ -33,7 +33,13 @@ let gui_date_10 = document.getElementById ("date_10")
 let gui_date = [ gui_date_0, gui_date_1, gui_date_2, gui_date_3, gui_date_4,
                  gui_date_5, gui_date_6, gui_date_7, gui_date_8, gui_date_9, gui_date_10 ]
 
-let gui_time      = document.getElementById ("time")
+let gui_hh_fill_0 = document.getElementById ("time_fill_0")
+let gui_hh_fill_1 = document.getElementById ("time_fill_1")
+let gui_hh_fill = [ gui_hh_fill_0, gui_hh_fill_1 ]
+
+let gui_mm_fill_0 = document.getElementById ("time_fill_3")
+let gui_mm_fill_1 = document.getElementById ("time_fill_4")
+let gui_mm_fill = [ gui_mm_fill_0, gui_mm_fill_1 ]
 
 let gui_steps_0 = document.getElementById ("steps_0")
 let gui_steps_1 = document.getElementById ("steps_1")
@@ -72,6 +78,7 @@ let current_zone = ""
 
 /* TODO: Only replace images if they've changed */
 /* TODO: Configurable colours */
+/* TODO: Set up additional callbacks so that _tick doesn't need to be called every second */
 
 function draw_text (target, font, string, colour="fb-white")
 {
@@ -115,12 +122,11 @@ function snepwatch_tick (event)
     /* Time */
     let hh = event.date.getHours ()
     let mm = event.date.getMinutes ()
-    let ss = event.date.getSeconds ()
     hh = ((hh < 10) ? "0" : "") + hh
     mm = ((mm < 10) ? "0" : "") + mm
-    ss = ((ss < 10) ? "0" : "") + ss
-        
-    gui_time.text = hh + ":" + mm + ":" + ss
+
+    draw_text (gui_hh_fill, "Digits_Fill", hh, "fb-red")
+    draw_text (gui_mm_fill, "Digits_Fill", mm, "fb-red")
 
     /* Steps */
     if (have_activity)
