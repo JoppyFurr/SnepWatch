@@ -35,11 +35,17 @@ let gui_date = [ gui_date_0, gui_date_1, gui_date_2, gui_date_3, gui_date_4,
 
 let gui_hh_fill_0 = document.getElementById ("time_fill_0")
 let gui_hh_fill_1 = document.getElementById ("time_fill_1")
-let gui_hh_fill = [ gui_hh_fill_0, gui_hh_fill_1 ]
-
 let gui_mm_fill_0 = document.getElementById ("time_fill_3")
 let gui_mm_fill_1 = document.getElementById ("time_fill_4")
+let gui_hh_fill = [ gui_hh_fill_0, gui_hh_fill_1 ]
 let gui_mm_fill = [ gui_mm_fill_0, gui_mm_fill_1 ]
+
+let gui_hh_outline_0 = document.getElementById ("time_outline_0")
+let gui_hh_outline_1 = document.getElementById ("time_outline_1")
+let gui_mm_outline_0 = document.getElementById ("time_outline_3")
+let gui_mm_outline_1 = document.getElementById ("time_outline_4")
+let gui_hh_outline = [ gui_hh_outline_0, gui_hh_outline_1 ]
+let gui_mm_outline = [ gui_mm_outline_0, gui_mm_outline_1 ]
 
 let gui_steps_0 = document.getElementById ("steps_0")
 let gui_steps_1 = document.getElementById ("steps_1")
@@ -125,8 +131,10 @@ function snepwatch_tick (event)
     hh = ((hh < 10) ? "0" : "") + hh
     mm = ((mm < 10) ? "0" : "") + mm
 
-    draw_text (gui_hh_fill, "Digits_Fill", hh, "fb-red")
-    draw_text (gui_mm_fill, "Digits_Fill", mm, "fb-red")
+    draw_text (gui_hh_fill,    "Digits_Fill",    hh, "fb-red")
+    draw_text (gui_hh_outline, "Digits_Outline", hh)
+    draw_text (gui_mm_fill,    "Digits_Fill",    mm, "fb-red")
+    draw_text (gui_mm_outline, "Digits_Outline", mm)
 
     /* Steps */
     if (have_activity)

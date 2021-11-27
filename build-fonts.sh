@@ -46,12 +46,12 @@ generate_digits ()
         CODE=$(printf '%d' "'${CHAR}'")
         convert -font ${FONT} -pointsize ${SIZE} -background transparent label:${CHAR} -filter point -resize 800% -negate ${DIR}/${CODE}.png
         cp ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png
-        convert -gravity center ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -geometry +2+0 -composite ${DIR}/${CODE}.png
-        convert -gravity center ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -geometry -2+0 -composite ${DIR}/${CODE}.png
-        convert -gravity center ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -geometry +0+2 -composite ${DIR}/${CODE}.png
-        convert -gravity center ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -geometry +0-2 -composite ${DIR}/${CODE}.png
+        convert -gravity center ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -geometry +1+0 -composite ${DIR}/${CODE}.png
+        convert -gravity center ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -geometry -1+0 -composite ${DIR}/${CODE}.png
+        convert -gravity center ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -geometry +0+1 -composite ${DIR}/${CODE}.png
+        convert -gravity center ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -geometry +0-1 -composite ${DIR}/${CODE}.png
         convert ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -compose Xor -composite ${DIR}/${CODE}.png
-        convert ${DIR}/${CODE}.png scanlines.png ${DIR}/${CODE}.png -composite ${DIR}/${CODE}.png
+        # convert ${DIR}/${CODE}.png scanlines.png ${DIR}/${CODE}.png -composite ${DIR}/${CODE}.png
         rm ${DIR}/${CODE}_base.png
     done
 
