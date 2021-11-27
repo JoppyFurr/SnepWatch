@@ -9,6 +9,7 @@ import { me as appbit } from "appbit"
 import { BodyPresenceSensor } from "body-presence"
 import { display } from "display"
 import { HeartRateSensor } from "heart-rate"
+import * as messaging from "messaging";
 import { battery } from "power"
 import { today } from "user-activity"
 import { user } from "user-profile"
@@ -36,19 +37,23 @@ let gui_date_10 = document.getElementById ("date_10")
 let gui_date = [ gui_date_0, gui_date_1, gui_date_2, gui_date_3, gui_date_4,
                  gui_date_5, gui_date_6, gui_date_7, gui_date_8, gui_date_9, gui_date_10 ]
 
-let gui_hh_fill_0 = document.getElementById ("time_fill_0")
-let gui_hh_fill_1 = document.getElementById ("time_fill_1")
-let gui_mm_fill_0 = document.getElementById ("time_fill_3")
-let gui_mm_fill_1 = document.getElementById ("time_fill_4")
-let gui_hh_fill = [ gui_hh_fill_0, gui_hh_fill_1 ]
-let gui_mm_fill = [ gui_mm_fill_0, gui_mm_fill_1 ]
+let gui_time_fill_0 = document.getElementById ("time_fill_0")
+let gui_time_fill_1 = document.getElementById ("time_fill_1")
+let gui_time_fill_2 = document.getElementById ("time_fill_2")
+let gui_time_fill_3 = document.getElementById ("time_fill_3")
+let gui_time_fill_4 = document.getElementById ("time_fill_4")
+let gui_time_outline_0 = document.getElementById ("time_outline_0")
+let gui_time_outline_1 = document.getElementById ("time_outline_1")
+let gui_time_outline_2 = document.getElementById ("time_outline_2")
+let gui_time_outline_3 = document.getElementById ("time_outline_3")
+let gui_time_outline_4 = document.getElementById ("time_outline_4")
 
-let gui_hh_outline_0 = document.getElementById ("time_outline_0")
-let gui_hh_outline_1 = document.getElementById ("time_outline_1")
-let gui_mm_outline_0 = document.getElementById ("time_outline_3")
-let gui_mm_outline_1 = document.getElementById ("time_outline_4")
-let gui_hh_outline = [ gui_hh_outline_0, gui_hh_outline_1 ]
-let gui_mm_outline = [ gui_mm_outline_0, gui_mm_outline_1 ]
+let gui_time_hh_fill =    [ gui_time_fill_0, gui_time_fill_1 ]
+let gui_time_hh_outline = [ gui_time_outline_0, gui_time_outline_1 ]
+let gui_time_se_fill =    [ gui_time_fill_2 ]
+let gui_time_se_outline = [ gui_time_outline_2 ]
+let gui_time_mm_fill =    [ gui_time_fill_3, gui_time_fill_4 ]
+let gui_time_mm_outline = [ gui_time_outline_3, gui_time_outline_4 ]
 
 let gui_steps_0 = document.getElementById ("steps_0")
 let gui_steps_1 = document.getElementById ("steps_1")
@@ -76,14 +81,19 @@ let gui_zone_7 = document.getElementById ("zone_7")
 let gui_zone = [ gui_zone_0, gui_zone_1, gui_zone_2, gui_zone_3,
                  gui_zone_4, gui_zone_5, gui_zone_6, gui_zone_7 ]
 
-let have_activity = false
+/* Globals */
 let heart_rate_monitor = null
 let body_presence_sensor = null
+let have_activity = false
 let body_present = false
 let current_heart_rate = 0
 let current_zone = ""
+let time_hh = 88
+let time_mm = 88
 
-/* TODO: Configurable colours */
+/* Settings */
+let time_fill_colour    = "darkred"
+let time_outline_colour = "crimson"
 
 /*
  * Draws text to an array of image elements.
@@ -126,6 +136,20 @@ function update_steps ()
 
 
 /*
+ * Draws the time to the screen.
+ */
+function draw_time ()
+{
+    draw_text (gui_time_hh_fill,    "Digits_Fill",    time_hh, time_fill_colour)
+    draw_text (gui_time_hh_outline, "Digits_Outline", time_hh, time_outline_colour)
+    draw_text (gui_time_se_fill,    "Digits_Fill",    ":",     time_fill_colour)
+    draw_text (gui_time_se_outline, "Digits_Outline", ":",     time_outline_colour)
+    draw_text (gui_time_mm_fill,    "Digits_Fill",    time_mm, time_fill_colour)
+    draw_text (gui_time_mm_outline, "Digits_Outline", time_mm, time_outline_colour)
+}
+
+
+/*
  * Called once per minute.
  *
  * Updates the time, date, and battery level.
@@ -153,15 +177,12 @@ function snepwatch_tick (event)
     draw_text (gui_date, "Terminus_14", date_text);
 
     /* Time */
-    let hh = event.date.getHours ()
-    let mm = event.date.getMinutes ()
-    hh = ((hh < 10) ? "0" : "") + hh
-    mm = ((mm < 10) ? "0" : "") + mm
+    let hours = event.date.getHours ()
+    let minutes = event.date.getMinutes ()
+    time_hh = ((hours < 10) ? "0" : "") + hours
+    time_mm = ((minutes < 10) ? "0" : "") + minutes
+    draw_time ()
 
-    draw_text (gui_hh_fill,    "Digits_Fill",    hh, "fb-red")
-    draw_text (gui_hh_outline, "Digits_Outline", hh)
-    draw_text (gui_mm_fill,    "Digits_Fill",    mm, "fb-red")
-    draw_text (gui_mm_outline, "Digits_Outline", mm)
 }
 
 
@@ -173,6 +194,7 @@ function update_heart_rate (event = null)
     body_present = body_presence_sensor.present;
     if (body_present)
     {
+        /* TODO: is this always a Number? */
         current_heart_rate = heart_rate_monitor.heartRate
     }
     else
@@ -212,8 +234,29 @@ function update_heart_rate (event = null)
 
 
 /*
+ * Called when a setting changes.
+ */
+function settings_callback (event)
+{
+    if (event.data.key == "fill_colour")
+    {
+        time_fill_colour = event.data.value
+    }
+
+    if (event.data.key == "outline_colour")
+    {
+        time_outline_colour = event.data.value
+    }
+
+    draw_time ()
+}
+
+
+/*
  * Start of 'main'.
  */
+
+/* TODO: Load settings */
 
 if (appbit.permissions.granted ("access_activity"))
 {
@@ -246,6 +289,9 @@ if (appbit.permissions.granted ("access_heart_rate") && appbit.permissions.grant
             heart_rate_monitor.stop ()
         }
     })
+
+    /* Settings listener */
+    messaging.peerSocket.addEventListener("message", settings_callback)
 }
 
 clock.granularity = "minutes"
