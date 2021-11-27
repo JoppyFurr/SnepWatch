@@ -13,6 +13,9 @@ import { battery } from "power"
 import { today } from "user-activity"
 import { user } from "user-profile"
 
+let days = [ "Sun ", "Mon ", "Tue ", "Wed ", "Thu ", "Fri ", "Sat " ]
+let months = [ " Jan", " Feb", " Mar", " Apr", " May", " June", " July", " Aug", " Snep", " Oct", " Nov", " Dec"]
+
 let gui_battery_0 = document.getElementById ("battery_0")
 let gui_battery_1 = document.getElementById ("battery_1")
 let gui_battery_2 = document.getElementById ("battery_2")
@@ -74,18 +77,17 @@ let gui_zone = [ gui_zone_0, gui_zone_1, gui_zone_2, gui_zone_3,
                  gui_zone_4, gui_zone_5, gui_zone_6, gui_zone_7 ]
 
 let have_activity = false
-
-let have_heart_rate = false
 let heart_rate_monitor = null
 let body_presence_sensor = null
 let body_present = false
 let current_heart_rate = 0
 let current_zone = ""
 
-/* TODO: Only replace images if they've changed */
 /* TODO: Configurable colours */
-/* TODO: Set up additional callbacks so that _tick doesn't need to be called every second */
 
+/*
+ * Draws text to an array of image elements.
+ */
 function draw_text (target, font, string, colour="fb-white")
 {
     for (let i = 0; i < target.length; i++)
@@ -103,14 +105,39 @@ function draw_text (target, font, string, colour="fb-white")
     }
 }
 
-let days = [ "Sun ", "Mon ", "Tue ", "Wed ", "Thu ", "Fri ", "Sat " ]
-let months = [ " Jan", " Feb", " Mar", " Apr", " May", " June", " July", " Aug", " Snep", " Oct", " Nov", " Dec"]
 
+/*
+ * Called to propagate the step counter to the screen.
+ */
+function update_steps ()
+{
+    if (have_activity)
+    {
+        let steps_string = "" + today.adjusted.steps
+
+        if (today.adjusted.steps >= 1000)
+        {
+            steps_string = steps_string.slice (0, -3) + "," + steps_string.slice (-3)
+        }
+
+        draw_text (gui_steps, "Terminus_14", steps_string)
+    }
+}
+
+
+/*
+ * Called once per minute.
+ *
+ * Updates the time, date, and battery level.
+ */
 function snepwatch_tick (event)
 {
     /* Battery level */
     let battery_text = ((battery.chargeLevel < 10) ? "0" : "") + battery.chargeLevel + "%"
     draw_text (gui_battery, "Terminus_12", battery_text, battery.chargeLevel <= 15 ? "fb-pink" : "fb-lavender")
+
+    /* Steps */
+    update_steps ()
 
     /* Date */
     let day = days [ event.date.getDay () ]
@@ -135,50 +162,58 @@ function snepwatch_tick (event)
     draw_text (gui_hh_outline, "Digits_Outline", hh)
     draw_text (gui_mm_fill,    "Digits_Fill",    mm, "fb-red")
     draw_text (gui_mm_outline, "Digits_Outline", mm)
+}
 
-    /* Steps */
-    if (have_activity)
+
+/*
+ * Called to update the heart rate display.
+ */
+function update_heart_rate (event = null)
+{
+    body_present = body_presence_sensor.present;
+    if (body_present)
     {
-        let steps_string = "" + today.adjusted.steps
-
-        if (today.adjusted.steps >= 1000)
-        {
-            steps_string = steps_string.slice (0, -3) + "," + steps_string.slice (-3)
-        }
-
-        draw_text (gui_steps, "Terminus_14", steps_string)
+        current_heart_rate = heart_rate_monitor.heartRate
     }
-  
-    /* Heart Rate */
-    if (have_heart_rate)
+    else
     {
-        if (body_present && current_heart_rate != 0)
-        {
-            draw_text (gui_heart, "Terminus_14", "" + current_heart_rate)
+        current_heart_rate = 0
+    }
 
-            switch (current_zone)
-            {
-                case "fat-burn":
-                    draw_text (gui_zone,  "Terminus_14", "Fat-burn", "fb-lavender")
-                    break;
-                case "cardio":
-                    draw_text (gui_zone,  "Terminus_14", "  Cardio", "fb-peach")
-                    break;
-                case "peak":
-                    draw_text (gui_zone,  "Terminus_14", "    Peak", "fb-white")
-                    break;
-                default:
-                    draw_text (gui_zone,  "Terminus_14", "")
-                    break;
-            }
-        }
-        else
+    current_zone = user.heartRateZone (current_heart_rate)
+
+    /* Heart Rate */
+    if (body_present && current_heart_rate != 0)
+    {
+        draw_text (gui_heart, "Terminus_14", "" + current_heart_rate)
+
+        switch (current_zone)
         {
-            draw_text (gui_heart, "Terminus_14", "--")
-            draw_text (gui_zone,  "Terminus_14", "")
+            case "fat-burn":
+                draw_text (gui_zone,  "Terminus_14", "Fat-burn", "fb-lavender")
+                break;
+            case "cardio":
+                draw_text (gui_zone,  "Terminus_14", "  Cardio", "fb-peach")
+                break;
+            case "peak":
+                draw_text (gui_zone,  "Terminus_14", "    Peak", "fb-white")
+                break;
+            default:
+                draw_text (gui_zone,  "Terminus_14", "")
+                break;
         }
+    }
+    else
+    {
+        draw_text (gui_heart, "Terminus_14", "--")
+        draw_text (gui_zone,  "Terminus_14", "")
     }
 }
+
+
+/*
+ * Start of 'main'.
+ */
 
 if (appbit.permissions.granted ("access_activity"))
 {
@@ -187,32 +222,31 @@ if (appbit.permissions.granted ("access_activity"))
 
 if (appbit.permissions.granted ("access_heart_rate") && appbit.permissions.granted ("access_user_profile"))
 {
-    have_heart_rate = true
     heart_rate_monitor = new HeartRateSensor ()
-  
-    /* Heart Rate Monitor */
-    heart_rate_monitor.addEventListener ("reading", () => {
-        current_heart_rate = heart_rate_monitor.heartRate
-        current_zone = user.heartRateZone (current_heart_rate)
-    })
+    body_presence_sensor = new BodyPresenceSensor ()
+
+    /* Heart Rate Monitor. */
+    heart_rate_monitor.addEventListener ("reading", update_heart_rate)
     heart_rate_monitor.start ()
 
-    /* Display Monitor - Disable heart rate sensor while display is off. */
-    display.addEventListener ("change", () => {
-        display.on ? heart_rate_monitor.start () : heart_rate_monitor.stop ()
-    })
-  
     /* Presence Sensor - Disable heart rate display while not being worn. */
-    body_presence_sensor = new BodyPresenceSensor ()
-    body_presence_sensor.addEventListener ("reading", () => {
-        body_present = body_presence_sensor.present;
-        if (body_present == false)
+    body_presence_sensor.addEventListener ("reading", update_heart_rate)
+    body_presence_sensor.start ()
+
+    /* Display Monitor - Disable heart rate sensor while the display is off. */
+    /* Also ensure the step-counter is up-to-date when the display turns on. */
+    display.addEventListener ("change", () => {
+        if (display.on)
         {
-            current_heart_rate = 0
+            update_steps ()
+            heart_rate_monitor.start ()
+        }
+        else
+        {
+            heart_rate_monitor.stop ()
         }
     })
-    body_presence_sensor.start ()
 }
 
-clock.granularity = "seconds"
+clock.granularity = "minutes"
 clock.addEventListener ("tick", snepwatch_tick)
