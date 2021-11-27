@@ -1,6 +1,6 @@
 #!/bin/sh
 
-FONT=TerminusTTF-4.46.0.ttf
+FONT=terminus-font/TerminusTTF-4.46.0.ttf
 
 generate_font ()
 {
