@@ -4,6 +4,7 @@
  *
  * Based on https://github.com/Fitbit/sdk-moment
  */
+import { me as companion } from "companion";
 import * as messaging from "messaging";
 import { settingsStorage } from "settings";
 
@@ -22,6 +23,7 @@ function send_value (key, value)
         }
         else
         {
+            /* Exactly what magic triggers the connection - I'm not sure. */
             console.log("No peerSocket connection")
         }
     }
@@ -39,3 +41,14 @@ function setting_changed (event)
 }
 
 settingsStorage.addEventListener("change", setting_changed)
+
+/* Special case of the setting changing before the companion was running. */
+if (companion.launchReasons.settingsChanged)
+{
+    send_value ("fill_colour", settingsStorage.getItem ("fill_colour"))
+    send_value ("outline_colour", settingsStorage.getItem ("outline_colour"))
+}
+
+messaging.peerSocket.addEventListener("open", (event) => {
+    console.log ("peerSocket connection is open.")
+})

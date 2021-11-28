@@ -8,8 +8,9 @@ import document from "document"
 import { me as appbit } from "appbit"
 import { BodyPresenceSensor } from "body-presence"
 import { display } from "display"
+import * as fs from "fs"
 import { HeartRateSensor } from "heart-rate"
-import * as messaging from "messaging";
+import * as messaging from "messaging"
 import { battery } from "power"
 import { today } from "user-activity"
 import { user } from "user-profile"
@@ -93,6 +94,7 @@ let time_mm = 88
 /* Settings */
 let time_fill_colour    = "darkred"
 let time_outline_colour = "crimson"
+
 
 /*
  * Draws text to an array of image elements.
@@ -231,6 +233,39 @@ function update_heart_rate (event = null)
 
 
 /*
+ * Save settings to device flash.
+ */
+function settings_save ()
+{
+    let settings_data = {
+        "fill_colour": "" + time_fill_colour,
+        "outline_colour": "" + time_outline_colour
+    }
+
+    fs.writeFileSync ("settings.cbor", settings_data, "cbor")
+}
+
+
+/*
+ * Load settings from device flash.
+ */
+function settings_load ()
+{
+    try
+    {
+        let settings_data = fs.readFileSync ("settings.cbor", "cbor")
+
+        time_fill_colour = "" + settings_data.fill_colour
+        time_outline_colour = "" + settings_data.outline_colour
+    }
+    catch (e)
+    {
+        /* Config has likely not been saved yet. */
+    }
+}
+
+
+/*
  * Called when a setting changes.
  */
 function settings_callback (event)
@@ -245,6 +280,7 @@ function settings_callback (event)
         time_outline_colour = event.data.value
     }
 
+    settings_save ()
     draw_time ()
 }
 
@@ -253,13 +289,15 @@ function settings_callback (event)
  * Start of 'main'.
  */
 
-/* TODO: Load settings */
+settings_load ()
 
+/* Step counter is gated by the activity permission */
 if (appbit.permissions.granted ("access_activity"))
 {
     have_activity = true
 }
 
+/* Heart rate monitor is gated by the heart_rate and user_profile permissions */
 if (appbit.permissions.granted ("access_heart_rate") && appbit.permissions.granted ("access_user_profile"))
 {
     heart_rate_monitor = new HeartRateSensor ()
@@ -290,6 +328,10 @@ if (appbit.permissions.granted ("access_heart_rate") && appbit.permissions.grant
     /* Settings listener */
     messaging.peerSocket.addEventListener("message", settings_callback)
 }
+
+messaging.peerSocket.addEventListener("open", (event) => {
+    console.log ("peerSocket connection is open.")
+})
 
 clock.granularity = "minutes"
 clock.addEventListener ("tick", snepwatch_tick)
