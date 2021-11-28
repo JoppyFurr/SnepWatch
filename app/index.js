@@ -84,10 +84,9 @@ let gui_zone = [ gui_zone_0, gui_zone_1, gui_zone_2, gui_zone_3,
 /* Globals */
 let heart_rate_monitor = null
 let body_presence_sensor = null
-let have_activity = false
-let body_present = false
 let current_heart_rate = 0
 let current_zone = ""
+let have_activity = false
 let time_hh = 88
 let time_mm = 88
 
@@ -191,10 +190,8 @@ function snepwatch_tick (event)
  */
 function update_heart_rate (event = null)
 {
-    body_present = body_presence_sensor.present;
-    if (body_present)
+    if (body_presence_sensor.present && heart_rate_monitor.heartRate != null)
     {
-        /* TODO: is this always a Number? */
         current_heart_rate = heart_rate_monitor.heartRate
     }
     else
@@ -205,7 +202,7 @@ function update_heart_rate (event = null)
     current_zone = user.heartRateZone (current_heart_rate)
 
     /* Heart Rate */
-    if (body_present && current_heart_rate != 0)
+    if (current_heart_rate != 0)
     {
         draw_text (gui_heart, "Terminus_14", "" + current_heart_rate)
 
