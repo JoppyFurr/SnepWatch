@@ -12,8 +12,8 @@ Features:
  * Date: Eg. "Sun 28 Nov", "Wed 15 Snep"
  * Configurable fill and outline colour for time
  * Step counter
- * Heart rate + colour-coded zone
-   * Blue for Fat-burn
+ * Heart rate + colour-coded zone description
+   * Blue for "Fat-burn"
    * Gold for "Cardio"
    * White for "Peak"
    * Zone hidden when heart rate is below fat-burn.
