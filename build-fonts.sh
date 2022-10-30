@@ -13,7 +13,7 @@ generate_font ()
     for CHAR in ${CHARS}
     do
         CODE=$(printf '%d' "'${CHAR}'")
-        convert -font ${FONT} -pointsize ${SIZE} label:${CHAR} -filter point -resize 200% -negate ${DIR}/${CODE}.png
+        convert -font ${FONT} -background black -fill white -pointsize ${SIZE} label:${CHAR} -filter point -resize 200% ${DIR}/${CODE}.png
         convert ${DIR}/${CODE}.png scanlines.png -composite ${DIR}/${CODE}.png
     done
 }
@@ -29,7 +29,7 @@ generate_digits ()
     for CHAR in ${CHARS}
     do
         CODE=$(printf '%d' "'${CHAR}'")
-        convert -font ${FONT} -pointsize ${SIZE} label:${CHAR} -filter point -resize 800% -negate ${DIR}/${CODE}.png
+        convert -font ${FONT} -background black -fill white -pointsize ${SIZE} label:${CHAR} -filter point -resize 800% ${DIR}/${CODE}.png
         convert ${DIR}/${CODE}.png scanlines.png -composite ${DIR}/${CODE}.png
     done
 
