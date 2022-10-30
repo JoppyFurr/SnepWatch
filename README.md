@@ -26,7 +26,7 @@ Before running the usual Fitbit build process, the font images need to be genera
 
 Once this is done, the usual build mechanism can be used:
 ```
-nxp fitbit
+npx fitbit
 build
 install
 ```
