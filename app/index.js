@@ -151,6 +151,24 @@ function draw_time ()
 
 
 /*
+ * Called to determine where the battery percentage should be drawn.
+ *
+ * During charging or low-battery, the OS will draw a battery icon
+ * in the top-left, so we need to move the percentage to the right
+ * to avoid a collision.
+ */
+function update_battery_position ()
+{
+    let start_x = (battery.chargeLevel <= 16 || battery.charging) ? 50 : 8
+
+    for (let i = 0; i < gui_battery.length; i++)
+    {
+        gui_battery [i].x = start_x + (i * 14)
+    }
+}
+
+
+/*
  * Called once per minute.
  *
  * Updates the time, date, and battery level.
@@ -159,7 +177,8 @@ function snepwatch_tick (event)
 {
     /* Battery level */
     let battery_text = ((battery.chargeLevel < 10) ? "0" : "") + battery.chargeLevel + "%"
-    draw_text (gui_battery, "Terminus_12", battery_text, battery.chargeLevel <= 15 ? "fb-pink" : "fb-lavender")
+    update_battery_position ();
+    draw_text (gui_battery, "Terminus_12", battery_text, battery.chargeLevel <= 16 ? "fb-pink" : "fb-lavender")
 
     /* Steps */
     update_steps ()
