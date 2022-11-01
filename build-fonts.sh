@@ -39,19 +39,17 @@ generate_digits ()
     # Composition:
     # Union of with 2px offset in each up, down, left, right
     # difference with original
-    # apply scanlines
 
     for CHAR in ${CHARS}
     do
         CODE=$(printf '%d' "'${CHAR}'")
-        convert -font ${FONT} -pointsize ${SIZE} -background transparent label:${CHAR} -filter point -resize 800% -negate ${DIR}/${CODE}.png
+        convert -font ${FONT} -pointsize ${SIZE} -background transparent -fill white label:${CHAR} -filter point -resize 800% ${DIR}/${CODE}.png
         cp ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png
         convert -gravity center ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -geometry +1+0 -composite ${DIR}/${CODE}.png
         convert -gravity center ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -geometry -1+0 -composite ${DIR}/${CODE}.png
         convert -gravity center ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -geometry +0+1 -composite ${DIR}/${CODE}.png
         convert -gravity center ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -geometry +0-1 -composite ${DIR}/${CODE}.png
         convert ${DIR}/${CODE}.png ${DIR}/${CODE}_base.png -compose Xor -composite ${DIR}/${CODE}.png
-        # convert ${DIR}/${CODE}.png scanlines.png ${DIR}/${CODE}.png -composite ${DIR}/${CODE}.png
         rm ${DIR}/${CODE}_base.png
     done
 
